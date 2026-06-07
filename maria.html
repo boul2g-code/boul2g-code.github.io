@@ -311,7 +311,7 @@ async function callAI(){
   try {
     const resp = await fetch(API_URL, {
       method:"POST",
-      headers:{"Content-Type":"application/json","Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYnVid3JudGRtZHh5aW1xZGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MzQ1OTIsImV4cCI6MjA5MzQxMDU5Mn0.ppvRxn4_ENvO-R0oe471is-UYJgbu6Jcu_V34V7PEOs"},
+      headers:{"Content-Type":"application/json"},
       body:JSON.stringify({pin:pin, messages:history, topic, level}),
     });
     const data = await resp.json();
