@@ -188,10 +188,22 @@ const TOPICS = [
   {id:"descrittivo",  icon:"🖼️", name:"Testo descrittivo",  sub:"5 sensi, oggettivo/soggettivo"},
   {id:"argomentativo",icon:"💬", name:"Argomentativo",      sub:"Tesi, argomenti, confutazione"},
   {id:"grammatica",   icon:"📐", name:"Grammatica",         sub:"Verbi, accenti, congiuntivo"},
+  {id:"invalsi",      icon:"🧠", name:"Comprensione INVALSI", sub:"Inferenze, impliciti, lessico"},
+  {id:"logica",       icon:"🧩", name:"Analisi logica",     sub:"Soggetto, predicato, complementi"},
   {id:"lessico",      icon:"📚", name:"Lessico e stile",    sub:"Sinonimi, registro, riscrittura"},
   {id:"produzione",   icon:"✏️", name:"Produzione scritta", sub:"Scaletta, intro, conclusione"},
-  {id:"analisi",      icon:"🔍", name:"Analisi del testo",  sub:"Comprensione, interpretazione"},
-  {id:"autori",       icon:"🏛️", name:"Autori e opere",     sub:"Contesto, temi, esposizione orale"},
+  {id:"analisi",      icon:"🔍", name:"Analisi del testo",  sub:"Esplicito, implicito, autore"},
+  {id:"autori",       icon:"🏛️", name:"Autori e opere",     sub:"Contesto, temi, esposizione"},
+  {id:"letteratura",  icon:"🕯️", name:"Letteratura 3ª media", sub:"Autori principali, opere, temi"},
+  {id:"collegamenti", icon:"🔗", name:"Collegamenti",       sub:"Italiano, storia, scienze, tecnologia"},
+  {id:"orale_lungo",  icon:"🎙️", name:"Orale lungo",       sub:"Parlare 3-4 minuti con scaletta"},
+  {id:"verga",        icon:"🌾", name:"Verga",              sub:"Verismo, Malpelo, Malavoglia"},
+  {id:"manzoni",      icon:"📜", name:"Manzoni",            sub:"Promessi sposi, giustizia, fede"},
+  {id:"leopardi",     icon:"🌌", name:"Leopardi",           sub:"Infinito, natura, desiderio"},
+  {id:"pascoli",      icon:"🪺", name:"Pascoli",            sub:"Fanciullino, nido, memoria"},
+  {id:"dannunzio",    icon:"🌧️", name:"D'Annunzio",         sub:"Estetismo, panismo, suoni"},
+  {id:"ungaretti",    icon:"🕊️", name:"Ungaretti",          sub:"Guerra, parola essenziale"},
+  {id:"montale",      icon:"🪨", name:"Montale",            sub:"Male di vivere, oggetti, Novecento"},
 ];
 
 const LEVELS = [
@@ -314,10 +326,12 @@ async function callAI(){
     } else {
       history.push({role:"assistant",content:text});
       addBub("prof",text);
-      // advance step
-      stepCount=Math.min(stepCount+1,totalSteps);
-      setProgress(Math.round(stepCount/totalSteps*100));
-      updateDots(stepCount-1);
+      // advance only when the server says the main didactic step changed
+      if(data.advance!==false){
+        stepCount=Math.min(stepCount+1,totalSteps);
+        setProgress(Math.round(stepCount/totalSteps*100));
+        updateDots(stepCount-1);
+      }
       setStatus("ready");
     }
   } catch(e){
