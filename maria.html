@@ -1,452 +1,62 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang='it'>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Interrogazione AI · Maria · Italiano</title>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+<title>Interrogazione AI · Maria</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html{background:#0f1923;color:#e8e4dc;font-family:'Segoe UI',Arial,sans-serif;font-size:16px}
-body{min-height:100vh;display:flex;flex-direction:column}
-.hdr{background:linear-gradient(135deg,#0f2342,#1a3a5c);padding:14px 18px;
-     display:flex;align-items:center;justify-content:space-between;
-     border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:10}
-.hdr-title{font-weight:800;color:#fff;font-size:1rem}
-.hdr-title span{color:#f9d84a}
-.hdr-back{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-          color:#e8e4dc;border-radius:8px;padding:6px 13px;cursor:pointer;
-          font-size:.78rem;font-family:inherit;display:none}
-.main{flex:1;max-width:780px;margin:0 auto;padding:18px 14px;width:100%}
-.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-      border-radius:16px;padding:22px 18px;margin-bottom:14px}
-.card h2{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:6px}
-.card p{font-size:.84rem;color:rgba(255,255,255,.5);line-height:1.55;margin-bottom:14px}
-.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px;margin-bottom:14px}
-.tbtn{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);
-      border-radius:11px;padding:12px 13px;cursor:pointer;text-align:left;
-      color:#e8e4dc;font-family:inherit;transition:all .15s;width:100%}
-.tbtn:hover{border-color:rgba(249,216,74,.4)}
-.tbtn.sel{border-color:#f9d84a;background:rgba(249,216,74,.1);color:#f9d84a}
-.tbtn-icon{font-size:1.3rem;margin-bottom:5px}
-.tbtn-name{font-size:.83rem;font-weight:700}
-.tbtn-sub{font-size:.67rem;color:rgba(255,255,255,.35);margin-top:2px}
-.lgrid{display:flex;gap:9px;margin-bottom:14px;flex-wrap:wrap}
-.lbtn{flex:1;min-width:90px;background:rgba(255,255,255,.06);
-      border:2px solid rgba(255,255,255,.12);border-radius:10px;
-      padding:10px 8px;text-align:center;cursor:pointer;color:#e8e4dc;transition:all .15s}
-.lbtn.sel{border-color:#4ade80;background:rgba(74,222,128,.1);color:#4ade80}
-.lbtn-name{font-size:.83rem;font-weight:700}
-.lbtn-desc{font-size:.67rem;color:rgba(255,255,255,.35);margin-top:3px}
-.lbtn.sel .lbtn-desc{color:rgba(74,222,128,.6)}
-.steps-info{background:rgba(249,216,74,.08);border:1px solid rgba(249,216,74,.2);
-            border-radius:10px;padding:11px 14px;margin-bottom:14px;
-            font-size:.82rem;color:rgba(249,216,74,.85);line-height:1.5}
-.pin-label{font-size:.74rem;color:rgba(255,255,255,.4);margin-bottom:6px;display:block}
-.pin-input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-           border-radius:8px;padding:11px 14px;color:#e8e4dc;font-size:1.1rem;
-           font-family:monospace;outline:none;letter-spacing:4px;text-align:center;
-           transition:border-color .2s;margin-bottom:6px}
-.pin-input:focus{border-color:rgba(249,216,74,.5)}
-.pin-note{font-size:.69rem;color:rgba(255,255,255,.28);line-height:1.5}
-.start-btn{width:100%;padding:15px;border:none;border-radius:12px;
-           background:linear-gradient(135deg,#f9d84a,#e6c52a);
-           color:#0f2342;font-size:1rem;font-weight:800;cursor:pointer;
-           font-family:inherit;transition:opacity .15s}
-.start-btn:disabled{background:#252525;color:#555;cursor:not-allowed}
-.start-btn:hover:not(:disabled){opacity:.9}
-.err{background:rgba(169,50,38,.2);border:1px solid rgba(169,50,38,.4);
-     border-radius:8px;padding:10px 14px;font-size:.83rem;color:#f5a0a0;
-     margin-bottom:12px;display:none}
-.exam-meta{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-           border-radius:11px;padding:11px 15px;margin-bottom:11px;
-           display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
-.exam-meta-l{font-size:.79rem;color:rgba(255,255,255,.5)}
-.prog-wrap{background:rgba(255,255,255,.07);border-radius:20px;height:5px;
-           margin-bottom:13px;overflow:hidden}
-.prog-fill{background:#f9d84a;height:100%;border-radius:20px;transition:width .4s;width:0%}
-.step-indicator{display:flex;gap:5px;margin-bottom:13px;flex-wrap:wrap}
-.step-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);
-          transition:background .3s;flex-shrink:0}
-.step-dot.done{background:#4ade80}
-.step-dot.current{background:#f9d84a}
-.chat{display:flex;flex-direction:column;gap:11px;margin-bottom:14px;
-      min-height:280px;max-height:46vh;overflow-y:auto;padding-right:2px}
-.chat::-webkit-scrollbar{width:3px}
-.chat::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
-.bub{padding:11px 15px;border-radius:15px;line-height:1.65;font-size:.91rem;
-     animation:fadeIn .2s ease;max-width:88%}
-.bub-prof{border-bottom-left-radius:3px;background:rgba(26,82,118,.35);
-          border:1px solid rgba(26,82,118,.5);align-self:flex-start}
-.bub-student{border-bottom-right-radius:3px;background:rgba(74,222,128,.12);
-             border:1px solid rgba(74,222,128,.25);align-self:flex-end}
-.bub-sys{background:rgba(255,255,255,.04);align-self:center;text-align:center;
-         font-size:.78rem;color:rgba(255,255,255,.4);max-width:100%}
-.bub-sender{font-size:.68rem;font-weight:700;margin-bottom:4px}
-.s-prof{color:#6db3e8}
-.s-student{color:#4ade80;text-align:right}
-.typing{display:flex;align-items:center;gap:6px;padding:11px 15px;
-        background:rgba(26,82,118,.25);border:1px solid rgba(26,82,118,.35);
-        border-radius:15px;border-bottom-left-radius:3px;align-self:flex-start}
-.typing span{width:6px;height:6px;border-radius:50%;background:#6db3e8;display:inline-block}
-.typing span:nth-child(1){animation:bounce .9s 0s infinite}
-.typing span:nth-child(2){animation:bounce .9s .15s infinite}
-.typing span:nth-child(3){animation:bounce .9s .30s infinite}
-.typing-lbl{font-size:.74rem;color:#6db3e8;margin-left:4px}
-.inp-area{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-          border-radius:12px;padding:11px 13px}
-.inp-row{display:flex;gap:9px;align-items:flex-end}
-.inp-ta{flex:1;background:transparent;border:none;outline:none;color:#e8e4dc;
-        font-size:.92rem;font-family:inherit;resize:none;min-height:40px;
-        max-height:120px;line-height:1.55}
-.inp-ta::placeholder{color:rgba(255,255,255,.25)}
-.inp-send{background:#f9d84a;color:#0f2342;border:none;border-radius:10px;
-          padding:10px 15px;font-size:.87rem;font-weight:800;cursor:pointer;
-          font-family:inherit;flex-shrink:0}
-.inp-send:disabled{background:#252525;color:#555;cursor:not-allowed}
-.inp-hint{font-size:.67rem;color:rgba(255,255,255,.2);margin-top:6px}
-.rpt-score{font-size:5rem;font-weight:900;line-height:1;text-align:center;margin-bottom:4px}
-.rpt-sub{text-align:center;color:rgba(255,255,255,.45);font-size:.86rem;margin-bottom:20px}
-.rpt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px}
-.rpt-cell{background:rgba(255,255,255,.06);border-radius:9px;padding:11px 7px;text-align:center}
-.rpt-n{font-size:1.4rem;font-weight:900}
-.rpt-l{font-size:.67rem;color:rgba(255,255,255,.38);margin-top:2px}
-.rpt-section{margin-bottom:13px}
-.rpt-lbl{font-size:.7rem;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
-.rpt-body{font-size:.88rem;line-height:1.7;color:#d0cbc2}
-.restart-btn{width:100%;padding:13px;border:1px solid rgba(255,255,255,.2);
-             border-radius:10px;background:rgba(255,255,255,.08);color:#e8e4dc;
-             font-size:.91rem;font-weight:700;cursor:pointer;font-family:inherit}
-@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:480px){.tgrid{grid-template-columns:repeat(2,1fr)}.lgrid{flex-direction:column}}
+*{box-sizing:border-box;margin:0;padding:0}html{font-family:Segoe UI,Arial,sans-serif;background:#101820;color:#eee}body{min-height:100vh}.hdr{position:sticky;top:0;z-index:5;background:#152638;border-bottom:1px solid rgba(255,255,255,.1);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;color:#fff}.brand span{color:#f8d84a}.back{display:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#eee;border-radius:8px;padding:7px 10px;font:inherit;font-size:.78rem;cursor:pointer}.main{max-width:920px;margin:0 auto;padding:18px 14px 28px}.panel{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);border-radius:12px;padding:16px;margin-bottom:12px}.panel h2{font-size:1rem;margin-bottom:8px}.muted{color:rgba(255,255,255,.55);font-size:.82rem;line-height:1.45;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:9px}.choice{border:2px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);color:#eee;border-radius:10px;padding:11px;text-align:left;font:inherit;cursor:pointer;min-height:74px}.choice:hover{border-color:rgba(248,216,74,.5)}.choice.sel{border-color:#f8d84a;background:rgba(248,216,74,.1);color:#f8d84a}.ico{font-size:1.25rem;margin-bottom:4px}.nm{font-weight:800;font-size:.86rem}.sub{font-size:.68rem;color:rgba(255,255,255,.45);margin-top:3px;line-height:1.25}.choice.sel .sub{color:rgba(248,216,74,.65)}.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.pin{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:9px;color:#fff;padding:12px 14px;text-align:center;font:1.05rem Consolas,monospace;letter-spacing:4px;outline:none}.pin:focus{border-color:#f8d84a}.start{width:100%;border:0;background:#f8d84a;color:#11243a;border-radius:10px;padding:14px;font-weight:900;font-size:1rem;cursor:pointer}.err{display:none;background:rgba(180,35,24,.2);border:1px solid rgba(180,35,24,.45);color:#ffb4ac;border-radius:9px;padding:10px 12px;font-size:.84rem;margin-bottom:12px}.meta{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;color:rgba(255,255,255,.62);font-size:.8rem}.tag{color:#f8d84a;font-weight:800}.bar{height:6px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-bottom:10px}.fill{height:100%;width:0;background:#f8d84a;border-radius:20px;transition:width .25s}.dots{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.16)}.dot.done{background:#4ade80}.dot.cur{background:#f8d84a}.chat{display:flex;flex-direction:column;gap:10px;min-height:300px;max-height:52vh;overflow:auto;padding:2px 2px 10px}.bub{max-width:90%;border-radius:14px;padding:11px 13px;line-height:1.55;font-size:.92rem;white-space:pre-wrap}.prof{align-self:flex-start;background:rgba(56,120,171,.22);border:1px solid rgba(56,120,171,.38);border-bottom-left-radius:4px}.stu{align-self:flex-end;background:rgba(74,222,128,.13);border:1px solid rgba(74,222,128,.28);border-bottom-right-radius:4px}.sys{align-self:center;background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);font-size:.8rem}.sender{font-size:.68rem;font-weight:900;margin-bottom:4px;color:#8bc7f2}.inputbox{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);border-radius:12px;padding:10px}.row{display:flex;gap:9px;align-items:flex-end}.ta{flex:1;min-height:42px;max-height:130px;resize:none;background:transparent;border:0;outline:0;color:#fff;font:inherit;line-height:1.45}.send{border:0;background:#f8d84a;color:#11243a;border-radius:9px;padding:10px 14px;font-weight:900;cursor:pointer}.send:disabled{background:#333;color:#777;cursor:wait}.reportScore{text-align:center;font-size:4.4rem;font-weight:950;line-height:1;margin:10px 0}.reportSub{text-align:center;color:rgba(255,255,255,.55);margin-bottom:16px}.rsec{margin-top:12px}.rlab{font-weight:900;font-size:.73rem;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;color:#f8d84a}.rbody{line-height:1.55;color:#ddd;font-size:.9rem}@media(max-width:560px){.levels{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.main{padding:12px 10px}.bub{max-width:96%}}
 </style>
 </head>
 <body>
-
-<div class="hdr">
-  <div class="hdr-title">Interrogazione <span>AI</span> · Italiano</div>
-  <button class="hdr-back" id="hdr-back" onclick="goSetup()">← Ricomincia</button>
-</div>
-
-<div class="main">
-
-  <div id="s-setup">
-    <div class="card">
-      <h2>Scegli l'argomento</h2>
-      <p>La professoressa AI segue un percorso didattico vero — non spara domande a caso. Ogni argomento ha il suo percorso strutturato.</p>
-      <div class="tgrid" id="tgrid"></div>
-      <h2 style="margin-bottom:10px">Livello di difficoltà</h2>
-      <div class="lgrid" id="lgrid"></div>
-      <div class="steps-info" id="steps-info">
-        Seleziona un livello per vedere quanti step ha la sessione.
-      </div>
-      <label class="pin-label">🔑 Codice di accesso</label>
-      <input class="pin-input" id="pin" type="password" placeholder="• • • • • • • •" maxlength="20">
-      <div class="pin-note">Chiedi il codice a papà per iniziare.</div>
-    </div>
-    <div class="err" id="err-box"></div>
-    <button class="start-btn" id="start-btn" onclick="startExam()">Inizia l'interrogazione →</button>
+<header class='hdr'><div class='brand'>Interrogazione <span>AI</span> · Maria</div><button class='back' id='back' onclick='goSetup()'>Ricomincia</button></header>
+<main class='main'>
+<section id='setup'>
+  <div class='panel'><h2>Materia</h2><p class='muted'>Scegli prima la materia, poi l’argomento specifico. Il percorso cambia lato server.</p><div class='grid' id='subjects'></div></div>
+  <div class='panel'><h2>Argomento</h2><div class='grid' id='topics'></div></div>
+  <div class='panel'><h2>Livello</h2><div class='levels' id='levels'></div></div>
+  <div class='panel'><h2>Codice</h2><input class='pin' id='pin' type='password' placeholder='••••••••' maxlength='24'></div>
+  <div class='err' id='err'></div><button class='start' onclick='startExam()'>Inizia interrogazione</button>
+</section>
+<section id='exam' style='display:none'>
+  <div class='panel'>
+    <div class='meta'><div><span class='tag' id='metaSubject'></span> · <span id='metaTopic'></span> · <span id='metaLevel'></span></div><div id='status'></div></div>
+    <div class='bar'><div class='fill' id='fill'></div></div><div class='dots' id='dots'></div>
+    <div class='chat' id='chat'></div>
+    <div class='inputbox'><div class='row'><textarea class='ta' id='answer' rows='2' placeholder='Scrivi la risposta...' onkeydown='keySend(event)'></textarea><button class='send' id='send' onclick='sendAnswer()'>Invia</button></div></div>
   </div>
-
-  <div id="s-exam" style="display:none">
-    <div class="exam-meta">
-      <div class="exam-meta-l">
-        <b id="ex-topic" style="color:#f9d84a"></b><span id="ex-level"></span>
-      </div>
-      <div id="ex-status" style="font-size:.75rem"></div>
-    </div>
-    <div class="prog-wrap"><div class="prog-fill" id="prog"></div></div>
-    <div class="step-indicator" id="step-dots"></div>
-    <div class="chat" id="chat"></div>
-    <div class="inp-area">
-      <div class="inp-row">
-        <textarea class="inp-ta" id="inp" placeholder="Scrivi la tua risposta..." rows="2"
-          onkeydown="onKey(event)"></textarea>
-        <button class="inp-send" id="send-btn" onclick="send()">Invia →</button>
-      </div>
-      <div class="inp-hint">Invio = manda · Shift+Invio = vai a capo</div>
-    </div>
-  </div>
-
-  <div id="s-report" style="display:none">
-    <div class="card">
-      <div class="rpt-score" id="rpt-score"></div>
-      <div class="rpt-sub" id="rpt-sub"></div>
-      <div class="rpt-grid" id="rpt-grid"></div>
-      <div id="rpt-body"></div>
-    </div>
-    <button class="restart-btn" onclick="goSetup()">🔄 Nuova interrogazione</button>
-  </div>
-
-</div>
-
+</section>
+<section id='report' style='display:none'><div class='panel'><div class='reportScore' id='score'>—</div><div class='reportSub' id='reportSub'></div><div id='reportBody'></div></div><button class='start' onclick='goSetup()'>Nuova interrogazione</button></section>
+</main>
 <script>
-const API_URL = "https://zibubwrntdmdxyimqddo.supabase.co/functions/v1/maria-chat";
-
-const TOPICS = [
-  {id:"narrativo",    icon:"📖", name:"Testo narrativo",    sub:"Struttura, narratore, personaggi"},
-  {id:"descrittivo",  icon:"🖼️", name:"Testo descrittivo",  sub:"5 sensi, oggettivo/soggettivo"},
-  {id:"argomentativo",icon:"💬", name:"Argomentativo",      sub:"Tesi, argomenti, confutazione"},
-  {id:"grammatica",   icon:"📐", name:"Grammatica",         sub:"Verbi, accenti, congiuntivo"},
-  {id:"invalsi",      icon:"🧠", name:"Comprensione INVALSI", sub:"Inferenze, impliciti, lessico"},
-  {id:"logica",       icon:"🧩", name:"Analisi logica",     sub:"Soggetto, predicato, complementi"},
-  {id:"lessico",      icon:"📚", name:"Lessico e stile",    sub:"Sinonimi, registro, riscrittura"},
-  {id:"produzione",   icon:"✏️", name:"Produzione scritta", sub:"Scaletta, intro, conclusione"},
-  {id:"analisi",      icon:"🔍", name:"Analisi del testo",  sub:"Esplicito, implicito, autore"},
-  {id:"autori",       icon:"🏛️", name:"Autori e opere",     sub:"Contesto, temi, esposizione"},
-  {id:"letteratura",  icon:"🕯️", name:"Letteratura 3ª media", sub:"Autori principali, opere, temi"},
-  {id:"collegamenti", icon:"🔗", name:"Collegamenti",       sub:"Italiano, storia, scienze, tecnologia"},
-  {id:"orale_lungo",  icon:"🎙️", name:"Orale lungo",       sub:"Parlare 3-4 minuti con scaletta"},
-  {id:"verga",        icon:"🌾", name:"Verga",              sub:"Verismo, Malpelo, Malavoglia"},
-  {id:"manzoni",      icon:"📜", name:"Manzoni",            sub:"Promessi sposi, giustizia, fede"},
-  {id:"leopardi",     icon:"🌌", name:"Leopardi",           sub:"Infinito, natura, desiderio"},
-  {id:"pascoli",      icon:"🪺", name:"Pascoli",            sub:"Fanciullino, nido, memoria"},
-  {id:"dannunzio",    icon:"🌧️", name:"D'Annunzio",         sub:"Estetismo, panismo, suoni"},
-  {id:"ungaretti",    icon:"🕊️", name:"Ungaretti",          sub:"Guerra, parola essenziale"},
-  {id:"montale",      icon:"🪨", name:"Montale",            sub:"Male di vivere, oggetti, Novecento"},
-];
-
-const LEVELS = [
-  {id:"base",      emoji:"🟢", name:"Base",      desc:"6 step · incoraggiante"},
-  {id:"medio",     emoji:"🟡", name:"Medio",     desc:"10 step · come l'esame"},
-  {id:"difficile", emoji:"🔴", name:"Difficile", desc:"14 step · commissione severa"},
-];
-
-const STEPS = {base:6, medio:10, difficile:14};
-
-let topic=null, level="medio", history=[], pin="", loading=false, stepCount=0, totalSteps=10;
-
-// ── INIT ──
-document.getElementById("tgrid").innerHTML = TOPICS.map(t =>
-  `<button class="tbtn" id="tp-${t.id}" onclick="selTopic('${t.id}')">
-    <div class="tbtn-icon">${t.icon}</div>
-    <div class="tbtn-name">${t.name}</div>
-    <div class="tbtn-sub">${t.sub}</div>
-  </button>`
-).join("");
-
-document.getElementById("lgrid").innerHTML = LEVELS.map(l =>
-  `<div class="lbtn${l.id==="medio"?" sel":""}" id="lv-${l.id}" onclick="selLevel('${l.id}')">
-    <div class="lbtn-name">${l.emoji} ${l.name}</div>
-    <div class="lbtn-desc">${l.desc}</div>
-  </div>`
-).join("");
-
-updateStepsInfo();
-
-function selTopic(id){
-  topic=id;
-  document.querySelectorAll(".tbtn").forEach(b=>b.classList.remove("sel"));
-  document.getElementById("tp-"+id).classList.add("sel");
-}
-
-function selLevel(id){
-  level=id;
-  document.querySelectorAll(".lbtn").forEach(b=>b.classList.remove("sel"));
-  document.getElementById("lv-"+id).classList.add("sel");
-  updateStepsInfo();
-}
-
-function updateStepsInfo(){
-  const s = STEPS[level];
-  const desc = {
-    base: `${s} step · La professoressa è incoraggiante e dà suggerimenti se ti blocchi.`,
-    medio: `${s} step · Come l'esame reale: nessun aiuto automatico, correzione chiara.`,
-    difficile: `${s} step · Standard commissione: se la risposta è incompleta, insiste.`,
-  };
-  document.getElementById("steps-info").textContent = desc[level];
-}
-
-function showScreen(s){
-  ["setup","exam","report"].forEach(x=>
-    document.getElementById("s-"+x).style.display=x===s?"block":"none"
-  );
-  document.getElementById("hdr-back").style.display=s==="setup"?"none":"block";
-  window.scrollTo(0,0);
-}
-
-function goSetup(){
-  history=[];stepCount=0;loading=false;
-  document.getElementById("chat").innerHTML="";
-  document.getElementById("inp").value="";
-  setLoading(false);
-  showScreen("setup");
-}
-
-function showErr(msg){
-  const b=document.getElementById("err-box");
-  b.textContent="⚠️ "+msg; b.style.display="block";
-}
-function hideErr(){document.getElementById("err-box").style.display="none";}
-
-// ── START ──
-async function startExam(){
-  hideErr();
-  pin=document.getElementById("pin").value.trim().toUpperCase();
-  if(!pin){showErr("Inserisci il codice di accesso.");return;}
-  if(!topic){showErr("Seleziona un argomento.");return;}
-
-  const t=TOPICS.find(x=>x.id===topic);
-  const l=LEVELS.find(x=>x.id===level);
-  totalSteps=STEPS[level];
-
-  document.getElementById("ex-topic").textContent=t.name+" ";
-  document.getElementById("ex-level").textContent="· "+l.emoji+" "+l.name+" · "+totalSteps+" step";
-
-  // build step dots
-  document.getElementById("step-dots").innerHTML=
-    Array.from({length:totalSteps},(_,i)=>`<div class="step-dot" id="dot-${i}"></div>`).join("");
-
-  showScreen("exam");
-  history=[{role:"user",content:"Inizia l'interrogazione."}];
-  stepCount=0;
-  setProgress(0);
-  setStatus("thinking");
-  await callAI();
-}
-
-// ── API — topic e level vanno al server, nessun system nel browser ──
-async function callAI(){
-  showTyping(); setLoading(true);
-  try {
-    const resp = await fetch(API_URL, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({pin:pin, messages:history, topic, level}),
-    });
-    const data = await resp.json();
-    if(!resp.ok) throw new Error(data.error||"Errore server "+resp.status);
-    const text = data.text||"";
-    removeTyping();
-
-    if(text.includes("---REPORT---")){
-      const [pre,rest]=text.split("---REPORT---");
-      if(pre.trim()) addBub("prof",pre.trim());
-      showReport((rest||"").split("---FINE---")[0].trim());
-    } else {
-      history.push({role:"assistant",content:text});
-      addBub("prof",text);
-      // advance only when the server says the main didactic step changed
-      if(data.advance!==false){
-        stepCount=Math.min(stepCount+1,totalSteps);
-        setProgress(Math.round(stepCount/totalSteps*100));
-        updateDots(stepCount-1);
-      }
-      setStatus("ready");
-    }
-  } catch(e){
-    removeTyping();
-    addBub("sys","⚠️ "+e.message+" — riprova.");
-    setStatus("ready");
-  } finally {
-    setLoading(false);
-    setTimeout(()=>document.getElementById("inp").focus(),80);
-  }
-}
-
-async function send(){
-  const inp=document.getElementById("inp");
-  const txt=inp.value.trim();
-  if(!txt||loading)return;
-  inp.value=""; inp.style.height="auto";
-  addBub("student",txt);
-  history.push({role:"user",content:txt});
-  setStatus("thinking");
-  await callAI();
-}
-
-function onKey(e){
-  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();}
-  const ta=e.target; ta.style.height="auto";
-  ta.style.height=Math.min(ta.scrollHeight,120)+"px";
-}
-
-// ── UI ──
-function addBub(role,text){
-  const chat=document.getElementById("chat");
-  const d=document.createElement("div");
-  d.className="bub bub-"+role;
-  if(role==="prof") d.innerHTML=`<div class="bub-sender s-prof">👩‍🏫 Professoressa</div>${esc(text)}`;
-  else if(role==="student") d.innerHTML=`<div class="bub-sender s-student">📝 Maria</div>${esc(text)}`;
-  else d.textContent=text;
-  chat.appendChild(d); chat.scrollTop=chat.scrollHeight;
-}
-
-function showTyping(){
-  const chat=document.getElementById("chat");
-  const d=document.createElement("div"); d.className="typing"; d.id="typing";
-  d.innerHTML=`<span></span><span></span><span></span><span class="typing-lbl">La professoressa sta scrivendo...</span>`;
-  chat.appendChild(d); chat.scrollTop=chat.scrollHeight;
-}
-function removeTyping(){const t=document.getElementById("typing");if(t)t.remove();}
-
-function setLoading(on){
-  loading=on;
-  document.getElementById("send-btn").disabled=on;
-  document.getElementById("inp").disabled=on;
-}
-function setStatus(s){
-  const el=document.getElementById("ex-status");
-  el.innerHTML=s==="thinking"
-    ?`<span style="color:#f9d84a">⏳ Sta scrivendo...</span>`
-    :`<span style="color:#4ade80">✅ Scrivi la risposta</span>`;
-}
-function setProgress(pct){document.getElementById("prog").style.width=pct+"%";}
-
-function updateDots(completedIdx){
-  for(let i=0;i<totalSteps;i++){
-    const d=document.getElementById("dot-"+i);
-    if(!d)continue;
-    d.className="step-dot";
-    if(i<completedIdx) d.classList.add("done");
-    else if(i===completedIdx) d.classList.add("current");
-  }
-}
-
-// ── REPORT ──
-function showReport(raw){
-  showScreen("report");
-  const r={voto:"—",punti:"",migliorare:"",errori:"",consiglio:""};
-  raw.split("\n").map(l=>l.trim()).forEach(l=>{
-    if(l.startsWith("VOTO:"))            r.voto=l.slice(5).trim();
-    else if(l.startsWith("PUNTI FORTI:"))     r.punti=l.slice(12).trim();
-    else if(l.startsWith("DA MIGLIORARE:"))   r.migliorare=l.slice(14).trim();
-    else if(l.startsWith("ERRORI RICORRENTI:"))r.errori=l.slice(18).trim();
-    else if(l.startsWith("CONSIGLIO:"))        r.consiglio=l.slice(10).trim();
-  });
-
-  const v=parseInt(r.voto)||0;
-  const col=v>=8?"#4ade80":v>=6?"#f9d84a":"#f87171";
-  const t=TOPICS.find(x=>x.id===topic);
-  const l=LEVELS.find(x=>x.id===level);
-
-  document.getElementById("rpt-score").textContent=r.voto;
-  document.getElementById("rpt-score").style.color=col;
-  document.getElementById("rpt-sub").textContent="Voto finale · "+( t?.name||"")+" · "+(l?.emoji||"")+" "+(l?.name||"");
-  document.getElementById("rpt-grid").innerHTML=[
-    {n:totalSteps+"",l:"Step"},
-    {n:l?.emoji||"",l:l?.name||""},
-    {n:"📝",l:"Orale AI"},
-  ].map(x=>`<div class="rpt-cell"><div class="rpt-n">${x.n}</div><div class="rpt-l">${x.l}</div></div>`).join("");
-
-  document.getElementById("rpt-body").innerHTML=[
-    {label:"✅ Punti forti",         color:"#4ade80", text:r.punti},
-    {label:"📈 Da migliorare",       color:"#f9d84a", text:r.migliorare},
-    {label:"⚠️ Errori ricorrenti",   color:"#f87171", text:r.errori},
-    {label:"💡 Consiglio per l'esame",color:"#6db3e8", text:r.consiglio},
-  ].filter(x=>x.text).map(x=>
-    `<div class="rpt-section">
-      <div class="rpt-lbl" style="color:${x.color}">${x.label}</div>
-      <div class="rpt-body">${esc(x.text)}</div>
-    </div>`
-  ).join("");
-}
-
-function esc(s){
-  return String(s)
-    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;").replace(/\n/g,"<br>");
-}
+const API_URL='https://zibubwrntdmdxyimqddo.supabase.co/functions/v1/maria-chat';
+const SUBJECTS={
+ italiano:{icon:'🇮🇹',name:'Italiano',sub:'testi, grammatica, orale',topics:{narrativo:['📖','Narrativo','struttura, narratore'],descrittivo:['🖼️','Descrittivo','5 sensi, registro'],argomentativo:['💬','Argomentativo','tesi, argomenti'],grammatica:['📐','Grammatica','verbi, accenti, analisi'],lessico:['📚','Lessico','sinonimi, stile'],produzione:['✏️','Produzione','scaletta, tema'],analisi:['🔍','Analisi testo','esplicito, implicito'],autori:['🏛️','Autori','opere, contesto'],orale:['🎙️','Orale esame','esposizione lunga']}},
+ inglese:{icon:'🇬🇧',name:'Inglese',sub:'grammar, reading, speaking',topics:{grammar:['📐','Grammar','tenses, conditionals'],vocabulary:['📚','Vocabulary','words, collocations'],writing:['✏️','Writing','email, essay'],reading:['🔍','Reading','comprehension'],speaking:['🎙️','Speaking','fluency, answers'],orale:['🏁','Orale esame','exam simulation']}},
+ spagnolo:{icon:'🇪🇸',name:'Spagnolo',sub:'gramática, comprensión, oral',topics:{grammar:['📐','Gramática','ser/estar, verbos'],vocabulary:['📚','Vocabulario','palabras, falsos amigos'],writing:['✏️','Escritura','texto, carta'],reading:['🔍','Comprensión','lectura'],speaking:['🎙️','Expresión oral','presentación'],orale:['🏁','Orale esame','simulación']}},
+ matematica:{icon:'📊',name:'Matematica',sub:'metodo, calcolo, orale',topics:{algebra:['𝑥','Algebra','equazioni, sistemi'],geometria:['📐','Geometria','figure, teoremi'],statistica:['📊','Statistica','media, probabilità'],funzioni:['📈','Funzioni','grafici, rette'],problemi:['🧩','Problem solving','dati, incognita'],orale:['🎙️','Orale esame','spiegare concetti']}}
+};
+const LEVELS={base:['🟢','Base','6 step · guidato'],medio:['🟡','Medio','10 step · esame'],difficile:['🔴','Difficile','14 step · severo']};
+const STEP_COUNT={base:6,medio:10,difficile:14};
+let subject='italiano',topic='narrativo',level='medio',pin='',history=[],step=0,total=10,loading=false;
+function init(){renderSubjects();renderTopics();renderLevels()}init();
+function renderSubjects(){subjects.innerHTML=Object.entries(SUBJECTS).map(([id,s])=>btn('subj',id,s.icon,s.name,s.sub,id===subject)).join('')}
+function renderTopics(){const t=SUBJECTS[subject].topics;if(!t[topic])topic=Object.keys(t)[0];topics.innerHTML=Object.entries(t).map(([id,x])=>btn('topic',id,x[0],x[1],x[2],id===topic)).join('')}
+function renderLevels(){levels.innerHTML=Object.entries(LEVELS).map(([id,x])=>btn('level',id,x[0],x[1],x[2],id===level)).join('')}
+function btn(kind,id,ico,name,sub,sel){return `<button class='choice ${sel?'sel':''}' onclick='choose("${kind}","${id}")'><div class='ico'>${ico}</div><div class='nm'>${name}</div><div class='sub'>${sub}</div></button>`}
+function choose(kind,id){if(kind==='subj'){subject=id;topic=Object.keys(SUBJECTS[subject].topics)[0];renderSubjects();renderTopics()}if(kind==='topic'){topic=id;renderTopics()}if(kind==='level'){level=id;renderLevels()}}
+function show(name){setup.style.display=name==='setup'?'block':'none';exam.style.display=name==='exam'?'block':'none';report.style.display=name==='report'?'block':'none';back.style.display=name==='setup'?'none':'block';scrollTo(0,0)}
+function error(msg){err.textContent='⚠️ '+msg;err.style.display='block'}function clearError(){err.style.display='none'}
+async function startExam(){clearError();pin=document.getElementById('pin').value.trim().toUpperCase();if(!pin)return error('Inserisci il codice.');history=[{role:'user',content:'Inizia l interrogazione.'}];step=0;total=STEP_COUNT[level];metaSubject.textContent=SUBJECTS[subject].name;metaTopic.textContent=SUBJECTS[subject].topics[topic][1];metaLevel.textContent=LEVELS[level][1]+' · '+total+' step';dots.innerHTML=Array.from({length:total},(_,i)=>`<span class='dot' id='dot${i}'></span>`).join('');fill.style.width='0%';chat.innerHTML='';show('exam');await callAI()}
+async function callAI(){setLoading(true);typing();try{const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin,subject,topic,level,messages:history})});const data=await res.json();if(!res.ok)throw new Error(data.error||'Errore server '+res.status);removeTyping();const text=data.text||'';if(text.includes('---REPORT---')){const parts=text.split('---REPORT---');if(parts[0].trim())bubble('prof',parts[0].trim());showReport((parts[1]||'').split('---FINE---')[0].trim());return}history.push({role:'assistant',content:text});bubble('prof',text);if(data.advance!==false)advance();status.textContent='Scrivi la risposta'}catch(e){removeTyping();bubble('sys',e.message||String(e));status.textContent='Errore'}finally{setLoading(false);setTimeout(()=>answer.focus(),80)}}
+function advance(){step=Math.min(step+1,total);fill.style.width=Math.round(step/total*100)+'%';for(let i=0;i<total;i++){const d=document.getElementById('dot'+i);if(d){d.className='dot '+(i<step-1?'done':i===step-1?'cur':'')}}}
+function setLoading(on){loading=on;send.disabled=on;answer.disabled=on;status.textContent=on?'Sta scrivendo...':''}
+function typing(){const d=document.createElement('div');d.id='typing';d.className='bub prof';d.textContent='La professoressa sta scrivendo...';chat.appendChild(d);chat.scrollTop=chat.scrollHeight}function removeTyping(){const t=document.getElementById('typing');if(t)t.remove()}
+function bubble(role,text){const d=document.createElement('div');d.className='bub '+(role==='student'?'stu':role==='sys'?'sys':'prof');d.innerHTML=role==='prof'?`<div class='sender'>Professoressa</div>${esc(text)}`:esc(text);chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+async function sendAnswer(){const text=answer.value.trim();if(!text||loading)return;answer.value='';bubble('student',text);history.push({role:'user',content:text});await callAI()}
+function keySend(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAnswer()}}
+function showReport(raw){show('report');const r={VOTO:'—','PUNTI FORTI':'','DA MIGLIORARE':'','ERRORI RICORRENTI':'',CONSIGLIO:''};raw.split('\n').forEach(line=>{const i=line.indexOf(':');if(i>0){const k=line.slice(0,i).trim();if(k in r)r[k]=line.slice(i+1).trim()}});score.textContent=r.VOTO;reportSub.textContent=SUBJECTS[subject].name+' · '+SUBJECTS[subject].topics[topic][1];reportBody.innerHTML=['PUNTI FORTI','DA MIGLIORARE','ERRORI RICORRENTI','CONSIGLIO'].map(k=>r[k]?`<div class='rsec'><div class='rlab'>${k}</div><div class='rbody'>${esc(r[k])}</div></div>`:'').join('')}
+function goSetup(){history=[];answer.value='';setLoading(false);show('setup')}function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}
 </script>
 </body>
 </html>
